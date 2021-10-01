@@ -2,16 +2,17 @@ const { NotFound } = require('http-errors')
 
 const { sendSucces } = require('../helpers')
 
-const contactsOperations = require('../model/contacts')
+// const contactsOperations = require('../model/contacts')
+const { Contact } = require('../models')
 
 const getAll = async (req, res) => {
-  const result = await contactsOperations.getAll()
+  const result = await Contact.find({})
   sendSucces(res, { result })
 }
 
 const getById = async (req, res) => {
   const { id } = req.params
-  const result = await contactsOperations.getById(id)
+  const result = await Contact.findById(id)
   if (!result) {
     throw new NotFound(`Contact with id=${id} not found `)
   }
@@ -19,13 +20,13 @@ const getById = async (req, res) => {
 }
 
 const add = async (req, res) => {
-  const result = await contactsOperations.add(req.body)
+  const result = await Contact.create(req.body)
   sendSucces(res, { result }, 201)
 }
 
 const updateById = async (req, res) => {
   const { id } = req.params
-  const result = await contactsOperations.updateById(id, req.body)
+  const result = await Contact.findByIdAndUpdate(id, req.body, { new: true })
   if (!result) {
     throw new NotFound(`Contact with id=${id} not found`)
   }
@@ -34,11 +35,25 @@ const updateById = async (req, res) => {
 
 const removeById = async (req, res, next) => {
   const { id } = req.params
-  const result = await contactsOperations.removeById(id)
+  const result = await Contact.findByIdAndDelete(id)
   if (!result) {
     throw new NotFound(`Contact with id=${id} not found`)
   }
   sendSucces(res, { message: 'Success delete' })
+}
+
+const updateStatusContact = async (req, res) => {
+  const { id } = req.params
+  const { favorite } = req.body
+  const result = await Contact.findByIdAndUpdate(
+    id,
+    { favorite },
+    { new: true },
+  )
+  if (!result) {
+    throw new NotFound('missing field favorite')
+  }
+  sendSucces(res, { result })
 }
 
 module.exports = {
@@ -47,4 +62,5 @@ module.exports = {
   add,
   updateById,
   removeById,
+  updateStatusContact,
 }
