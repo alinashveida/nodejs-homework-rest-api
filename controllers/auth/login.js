@@ -2,7 +2,7 @@ const { User } = require('../../models/user')
 const { BadRequest, NotFound } = require('http-errors')
 const jwt = require('jsonwebtoken')
 
-const { SEKRET_KEY } = process.env
+const { SECRET_KEY } = process.env
 
 const login = async (req, res) => {
   const { email, password } = req.body
@@ -26,7 +26,7 @@ const login = async (req, res) => {
     _id: user._id,
   }
 
-  const token = jwt.sign(payload, SEKRET_KEY)
+  const token = jwt.sign(payload, SECRET_KEY)
   await User.findByIdAndUpdate(user._id, { token })
   // const token = user.createToken()
   res.json({

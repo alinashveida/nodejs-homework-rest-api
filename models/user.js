@@ -2,11 +2,6 @@ const { Schema, model } = require('mongoose')
 const Joi = require('joi')
 const bcrypt = require('bcryptjs')
 
-// const jwt = require('jsonwebtoken')
-// const { func } = require('joi')
-
-// const { SEKRET_KEY } = process.env
-
 const userSchema = Schema(
   {
     password: {
@@ -38,13 +33,6 @@ userSchema.methods.setPassword = function (password) {
 userSchema.methods.comparePassword = function (password) {
   return bcrypt.compareSync(password, this.password)
 }
-
-// userSchema.methods.createToken = function () {
-//   const payload = {
-//     _id: this._id,
-//   }
-//   return jwt.sign(payload, SEKRET_KEY)
-// }
 
 const userJoiSchema = Joi.object({
   password: Joi.string().min(6).required(),
