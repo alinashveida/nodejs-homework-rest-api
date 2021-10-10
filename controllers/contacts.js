@@ -6,7 +6,12 @@ const { sendSucces } = require('../helpers')
 const { Contact } = require('../models')
 
 const getAll = async (req, res) => {
-  const result = await Contact.find({})
+  const { page = 1, limit = 20 } = req.query
+  const skip = (page - 1) * limit
+  const result = await Contact.find({}, '_id name email phone', {
+    skip,
+    limit: +limit,
+  })
   sendSucces(res, { result })
 }
 
