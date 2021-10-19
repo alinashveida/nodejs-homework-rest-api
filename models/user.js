@@ -25,6 +25,14 @@ const userSchema = Schema(
     avatarURL: {
       type: String,
     },
+    verify: {
+      type: Boolean,
+      default: false,
+    },
+    verifyToken: {
+      type: String,
+      required: [true, 'Verify token is required'],
+    },
   },
   { versionKey: false, timestamps: true },
 )
@@ -41,10 +49,12 @@ const userJoiSchema = Joi.object({
   password: Joi.string().min(6).required(),
   email: Joi.string().email({
     minDomainSegments: 2,
-    tlds: { allow: ['com', 'net'] },
+    tlds: { allow: ['com', 'net', 'ua'] },
   }),
   subscription: Joi.string(),
   avatarURL: Joi.string(),
+  verify: Joi.boolean(),
+  verifyToken: Joi.string(),
 })
 
 const User = model('user', userSchema)
