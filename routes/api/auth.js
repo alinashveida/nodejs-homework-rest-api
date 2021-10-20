@@ -28,11 +28,19 @@ router.get('/users/current', authenticate, controllerWrapper(ctrl.current))
 
 router.patch('/users', authenticate, controllerWrapper(ctrl.updateSubscr))
 
+
+
 router.patch(
   '/users/avatars',
   authenticate,
   upload.single('avatar'),
   controllerWrapper(ctrl.updateAvatar),
+)
+
+router.get(
+  '/users/verify/:verificationToken',
+  
+  controllerWrapper(ctrl.verify),
 )
 
 module.exports = router

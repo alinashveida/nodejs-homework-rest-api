@@ -6,7 +6,7 @@ const { SECRET_KEY } = process.env
 
 const login = async (req, res) => {
   const { email, password } = req.body
-  const user = await User.findOne({ email })
+  const user = await User.findOne({ email }, '_id email password verify')
 
   if (!user) {
     throw new NotFound(`Email ${email} is not found`)
@@ -19,7 +19,11 @@ const login = async (req, res) => {
   }
 
   if (!user.comparePassword(password)) {
-    throw new BadRequest('Invalid password ')
+    throw new BadRequest('Invalid password  ')
+  }
+
+  if (!user.verify) {
+    throw new BadRequest('Email not verify ')
   }
 
   const payload = {
